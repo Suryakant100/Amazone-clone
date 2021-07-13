@@ -2,16 +2,35 @@ import Image from "next/image";
 import { StarIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import Currency from "react-currency-formatter";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../slices/basketSlice";
 
 const max_rating = 5;
 const min_rating = 1;
 
 const Product = ({ id, title, price, category, description, image }) => {
+  const dispatch = useDispatch();
+
   const [rating] = useState(
     //   generating the random no between 1 to 5
     Math.floor(Math.random() * (max_rating - min_rating + 1) + min_rating)
   );
   const [hasPrime] = useState(Math.random() < 0.5);
+
+  const addItemToCart = () => {
+    const product = {
+      id,
+      title,
+      price,
+      category,
+      description,
+      image,
+      hasPrime,
+    };
+
+    // sending thr product to REDUX store
+    dispatch(addToCart(product));
+  };
 
   return (
     <div className="relative flex flex-col m-5 bg-white z-30 p-10">
@@ -50,7 +69,9 @@ const Product = ({ id, title, price, category, description, image }) => {
         </div>
       )}
 
-      <button className=" btn">Add to Cart</button>
+      <button onClick={addItemToCart} className=" btn">
+        Add to Cart
+      </button>
     </div>
   );
 };
